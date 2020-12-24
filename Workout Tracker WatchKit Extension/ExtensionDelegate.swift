@@ -7,11 +7,21 @@
 //
 
 import WatchKit
+import WatchConnectivity
 
-class ExtensionDelegate: NSObject, WKExtensionDelegate {
-
+class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate {
+    private let connectivitySession = WCSession.isSupported() ? WCSession.default : nil
+    
     func applicationDidFinishLaunching() {
         // Perform any final initialization of your application.
+        let sessions = (UserDefaults.standard.array(forKey: "sessions") as? [String]) ?? []
+        print("Found \(sessions.count) unsaved files")
+        for sess in sessions {
+            print(sess)
+        }
+        
+        connectivitySession?.delegate = self
+        connectivitySession?.activate()
     }
 
     func applicationDidBecomeActive() {
@@ -27,6 +37,36 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate {
         // Sent when the system needs to launch the application in the background to process tasks. Tasks arrive in a set, so loop through and process each one.
         for task in backgroundTasks {
             task.setTaskCompletedWithSnapshot(false)
+        }
+    }
+    
+    func session(_ session: WCSession, didFinish fileTransfer: WCSessionFileTransfer, error: Error?) {
+        if let error = error {
+            print(error.localizedDescription)
+            
+            let sessionName = fileTransfer.file.fileURL.lastPathComponent
+            var sessions = (UserDefaults.standard.array(forKey: "sessions") as? [String]) ?? []
+            sessions.append(sessionName)
+            UserDefaults.standard.set(sessions, forKey: "sessions")
+        } else {
+            print("File transferred successfully")
+        }
+    }
+    
+    func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
+        if activationState == .activated {
+            for session in (UserDefaults.standard.array(forKey: "sessions") as? [String]) ?? [] {
+                let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+                            
+                let filePath = paths[0].appendingPathComponent("\(session).json")
+                                
+                connectivitySession?.transferFile(filePath, metadata: nil)
+            }
+            UserDefaults.standard.set([], forKey: "sessions")
+        } else if activationState == .inactive {
+            print("Session Inactive")
+        } else {
+            print("Session Deactivated")
         }
     }
 

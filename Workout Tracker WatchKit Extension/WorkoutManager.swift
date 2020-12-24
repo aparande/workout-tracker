@@ -11,10 +11,11 @@ import Foundation
 import HealthKit
 
 protocol WorkoutManagerDelegate: class {
-    func didUpdateMotion(_ manager: WorkoutManager, repNumber: Int, state: State, workoutComplete: Bool)
+    func workoutStateUpdated(_ manager: WorkoutManager, repNumber: Int, state: State, workoutComplete: Bool)
+    func workoutEnded(_ manager: WorkoutManager, sessionData: Data?)
 }
 
-class WorkoutManager {
+class WorkoutManager: MotionManagerDelegate {
     // MARK: Properties
     let motionManager = MotionManager()
     let healthStore = HKHealthStore()
@@ -27,15 +28,16 @@ class WorkoutManager {
     var state: State
     
     var repLog:[(Int64, State)] = []
+    var motionData:[MotionData] = []
 
     // MARK: Initialization
     
     init(withReps repCount: Int) {
-        //motionManager.delegate = self
-        
         self.totalReps = repCount
         self.repNumber = 0
         self.state = .up
+        
+        self.motionManager.delegate = self
     }
 
     // MARK: WorkoutManager
@@ -51,8 +53,8 @@ class WorkoutManager {
 
         // Configure the workout session.
         let workoutConfiguration = HKWorkoutConfiguration()
-        workoutConfiguration.activityType = .other
-        workoutConfiguration.locationType = .unknown
+        workoutConfiguration.activityType = .tennis // Hopefully makes accelerometer data more accurate
+        workoutConfiguration.locationType = .outdoor
 
         do {
             session = try HKWorkoutSession(configuration: workoutConfiguration)
@@ -64,22 +66,23 @@ class WorkoutManager {
         healthStore.start(session!)
         motionManager.startUpdates()
         
+        // Set a timer to buzz the user to change state
         Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { (timer) in
             switch self.state {
             case .up:
                 if self.repNumber == self.totalReps {
                     self.stopWorkout()
-                    self.delegate?.didUpdateMotion(self, repNumber: self.repNumber, state: self.state, workoutComplete: true)
+                    self.delegate?.workoutStateUpdated(self, repNumber: self.repNumber, state: self.state, workoutComplete: true)
                     timer.invalidate()
                     return
                 }
                 
                 self.repNumber += 1
                 self.state = .down
-                self.delegate?.didUpdateMotion(self, repNumber: self.repNumber, state: self.state, workoutComplete: false)
+                self.delegate?.workoutStateUpdated(self, repNumber: self.repNumber, state: self.state, workoutComplete: false)
             case .down:
                 self.state = .up
-                self.delegate?.didUpdateMotion(self, repNumber: self.repNumber, state: self.state, workoutComplete: false)
+                self.delegate?.workoutStateUpdated(self, repNumber: self.repNumber, state: self.state, workoutComplete: false)
             }
             self.repLog.append((Date().millisecondsSince1970, self.state))
         }
@@ -98,8 +101,20 @@ class WorkoutManager {
         // Clear the workout session.
         session = nil
         
-        for rep in repLog {
-            print(rep)
+        // Encode the session data as JSON
+        let encoder = JSONEncoder()
+        do {
+            let json = try encoder.encode(self.motionData)
+            self.delegate?.workoutEnded(self, sessionData: json)
+        } catch {
+            print(error.localizedDescription)
         }
+    }
+    
+    // Motion Manager delegate called when motion data is processed from the buffer
+    func didProcessDeviceMotion(_ motion: MotionData) {
+        var motion = motion
+        motion.state = self.state.rawValue
+        self.motionData.append(motion)
     }
 }

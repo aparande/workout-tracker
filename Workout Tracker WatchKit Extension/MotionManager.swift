@@ -12,10 +12,35 @@ import CoreMotion
 import WatchKit
 import os.log
 
+struct MotionData: Codable {
+    let timestamp: Int64
+    var state: String? = nil
+    
+    let gravityX: Double
+    let gravityY: Double
+    let gravityZ: Double
+    
+    let accelX: Double
+    let accelY: Double
+    let accelZ: Double
+    
+    let rotX: Double
+    let rotY: Double
+    let rotZ: Double
+    
+    let roll: Double
+    let pitch: Double
+    let yaw: Double
+}
+
 extension Date {
     var millisecondsSince1970:Int64 {
         return Int64((self.timeIntervalSince1970 * 1000.0).rounded())
     }
+}
+
+protocol MotionManagerDelegate {
+    func didProcessDeviceMotion(_ motion: MotionData)
 }
 
 class MotionManager {
@@ -36,6 +61,8 @@ class MotionManager {
     var attitudeStr = ""
 
     var recentDetection = false
+    
+    var delegate: MotionManagerDelegate?
 
     // MARK: Initialization
     
@@ -56,6 +83,8 @@ class MotionManager {
         os_log("Start Updates");
 
         motionManager.deviceMotionUpdateInterval = sampleInterval
+        
+        // Start writing motion data to the processing buffer
         motionManager.startDeviceMotionUpdates(to: queue) { (deviceMotion: CMDeviceMotion?, error: Error?) in
             if error != nil {
                 print("Encountered error: \(error!)")
@@ -74,40 +103,23 @@ class MotionManager {
     }
 
     // MARK: Motion Processing
-    
     func processDeviceMotion(_ deviceMotion: CMDeviceMotion) {
-        gravityStr = String(format: "X: %.1f Y: %.1f Z: %.1f" ,
-                            deviceMotion.gravity.x,
-                            deviceMotion.gravity.y,
-                            deviceMotion.gravity.z)
-        userAccelStr = String(format: "X: %.1f Y: %.1f Z: %.1f" ,
-                           deviceMotion.userAcceleration.x,
-                           deviceMotion.userAcceleration.y,
-                           deviceMotion.userAcceleration.z)
-        rotationRateStr = String(format: "X: %.1f Y: %.1f Z: %.1f" ,
-                              deviceMotion.rotationRate.x,
-                              deviceMotion.rotationRate.y,
-                              deviceMotion.rotationRate.z)
-        attitudeStr = String(format: "r: %.1f p: %.1f y: %.1f" ,
-                                 deviceMotion.attitude.roll,
-                                 deviceMotion.attitude.pitch,
-                                 deviceMotion.attitude.yaw)
-        
         let timestamp = Date().millisecondsSince1970
         
-        os_log("Motion: %@, %@, %@, %@, %@, %@, %@, %@, %@, %@, %@, %@, %@",
-               String(timestamp),
-               String(deviceMotion.gravity.x),
-               String(deviceMotion.gravity.y),
-               String(deviceMotion.gravity.z),
-               String(deviceMotion.userAcceleration.x),
-               String(deviceMotion.userAcceleration.y),
-               String(deviceMotion.userAcceleration.z),
-               String(deviceMotion.rotationRate.x),
-               String(deviceMotion.rotationRate.y),
-               String(deviceMotion.rotationRate.z),
-               String(deviceMotion.attitude.roll),
-               String(deviceMotion.attitude.pitch),
-               String(deviceMotion.attitude.yaw))
+        let data = MotionData(timestamp: timestamp,
+                              gravityX: deviceMotion.gravity.x,
+                              gravityY: deviceMotion.gravity.y,
+                              gravityZ: deviceMotion.gravity.z,
+                              accelX: deviceMotion.userAcceleration.x,
+                              accelY: deviceMotion.userAcceleration.y,
+                              accelZ: deviceMotion.userAcceleration.z,
+                              rotX: deviceMotion.rotationRate.x,
+                              rotY: deviceMotion.rotationRate.y,
+                              rotZ: deviceMotion.rotationRate.z,
+                              roll: deviceMotion.attitude.roll,
+                              pitch: deviceMotion.attitude.pitch,
+                              yaw: deviceMotion.attitude.yaw)
+        
+        delegate?.didProcessDeviceMotion(data)
     }
 }

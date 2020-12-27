@@ -10,7 +10,7 @@
 import Foundation
 import HealthKit
 
-protocol WorkoutManagerDelegate: class {
+protocol WorkoutManagerDelegate: AnyObject {
     func workoutStateUpdated(_ manager: WorkoutManager, repNumber: Int, state: State, workoutComplete: Bool)
     func workoutEnded(_ manager: WorkoutManager, sessionData: Data?)
 }
@@ -23,21 +23,21 @@ class WorkoutManager: MotionManagerDelegate {
     weak var delegate: WorkoutManagerDelegate?
     var session: HKWorkoutSession?
     
-    let totalReps: Int
     var repNumber: Int
     var state: State
     
-    var repLog:[(Int64, State)] = []
     var motionData:[MotionData] = []
+    
+    var detector: PushupDetector?
 
     // MARK: Initialization
     
-    init(withReps repCount: Int) {
-        self.totalReps = repCount
+    init(withDetector detector: PushupDetector?) {
         self.repNumber = 0
         self.state = .up
         
         self.motionManager.delegate = self
+        self.detector = detector
     }
 
     // MARK: WorkoutManager
@@ -65,27 +65,6 @@ class WorkoutManager: MotionManagerDelegate {
         // Start the workout session and device motion updates.
         healthStore.start(session!)
         motionManager.startUpdates()
-        
-        // Set a timer to buzz the user to change state
-        Timer.scheduledTimer(withTimeInterval: 2, repeats: true) { (timer) in
-            switch self.state {
-            case .up:
-                if self.repNumber == self.totalReps {
-                    self.stopWorkout()
-                    self.delegate?.workoutStateUpdated(self, repNumber: self.repNumber, state: self.state, workoutComplete: true)
-                    timer.invalidate()
-                    return
-                }
-                
-                self.repNumber += 1
-                self.state = .down
-                self.delegate?.workoutStateUpdated(self, repNumber: self.repNumber, state: self.state, workoutComplete: false)
-            case .down:
-                self.state = .up
-                self.delegate?.workoutStateUpdated(self, repNumber: self.repNumber, state: self.state, workoutComplete: false)
-            }
-            self.repLog.append((Date().millisecondsSince1970, self.state))
-        }
     }
 
     func stopWorkout() {
@@ -112,9 +91,23 @@ class WorkoutManager: MotionManagerDelegate {
     }
     
     // Motion Manager delegate called when motion data is processed from the buffer
-    func didProcessDeviceMotion(_ motion: MotionData) {
+    func didLog(_ motion: MotionData) {
         var motion = motion
         motion.state = self.state.rawValue
         self.motionData.append(motion)
+        
+        self.process(motion)
+    }
+    
+    func process(_ motion: MotionData) {
+        if let newState = detector?.detect(from: motion), newState != self.state {
+            self.state = newState
+            
+            if self.state == .up {
+                self.repNumber += 1
+            }
+            
+            delegate?.workoutStateUpdated(self, repNumber: repNumber, state: newState, workoutComplete: false)
+        }
     }
 }

@@ -9,9 +9,7 @@
 import WatchKit
 import WatchConnectivity
 
-class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate {
-    private let connectivitySession = WCSession.isSupported() ? WCSession.default : nil
-    
+class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionFileTransferDelegate {
     func applicationDidFinishLaunching() {
         // Perform any final initialization of your application.
         let sessions = (UserDefaults.standard.array(forKey: "sessions") as? [String]) ?? []
@@ -43,11 +41,7 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate {
     func session(_ session: WCSession, didFinish fileTransfer: WCSessionFileTransfer, error: Error?) {
         if let error = error {
             print(error.localizedDescription)
-            
-            let sessionName = fileTransfer.file.fileURL.lastPathComponent
-            var sessions = (UserDefaults.standard.array(forKey: "sessions") as? [String]) ?? []
-            sessions.append(sessionName)
-            UserDefaults.standard.set(sessions, forKey: "sessions")
+            saveLocalFile(from: fileTransfer)
         } else {
             print("File transferred successfully")
         }
@@ -55,19 +49,11 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionDelegate {
     
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
         if activationState == .activated {
-            for session in (UserDefaults.standard.array(forKey: "sessions") as? [String]) ?? [] {
-                let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-                            
-                let filePath = paths[0].appendingPathComponent("\(session).json")
-                                
-                connectivitySession?.transferFile(filePath, metadata: nil)
-            }
-            UserDefaults.standard.set([], forKey: "sessions")
+            transferLocalFiles()
         } else if activationState == .inactive {
             print("Session Inactive")
         } else {
             print("Session Deactivated")
         }
     }
-
 }

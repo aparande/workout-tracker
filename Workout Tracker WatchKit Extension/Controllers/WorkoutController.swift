@@ -1,25 +1,34 @@
-/*
- Copyright (C) 2016 Apple Inc. All Rights Reserved.
- See LICENSE.txt for this sample’s licensing information
- 
- Abstract:
- This class is responsible for managing interactions with the interface.
- */
+//
+//  WorkoutController.swift
+//  Workout Tracker WatchKit Extension
+//
+//  Created by Anmol Parande on 12/24/20.
+//  Copyright © 2020 Anmol Parande. All rights reserved.
+//
 
 import WatchKit
 import WatchConnectivity
-import Foundation
-import Dispatch
 
-class WorkoutController: WKInterfaceController, WorkoutManagerDelegate, WCSessionDelegate {
-    // MARK: Properties
-    private let connectivitySession = WCSession.isSupported() ? WCSession.default : nil
+enum State:String {
+    case up = "Up", down = "Down"
+}
 
-    @IBOutlet var countLabel: WKInterfaceLabel!
-    @IBOutlet var stateLabel: WKInterfaceLabel!
-    @IBOutlet var controlButton: WKInterfaceButton!
+enum SessionType:String {
+    case counting, calibration
+}
+
+class WorkoutController: WKInterfaceController {
+    let WORKOUT_TYPE: SessionType = .counting
     
-    var workoutManager: WorkoutManager!
+    @IBOutlet weak var countLabel: WKInterfaceLabel!
+    @IBOutlet weak var stateLabel: WKInterfaceLabel!
+    @IBOutlet weak var controlButton: WKInterfaceButton!
+    
+    var workoutInSession: Bool = false {
+        didSet {
+            controlButton.setTitle(workoutInSession ? "Stop" : "Start")
+        }
+    }
     
     var count = 0 {
         didSet {
@@ -33,7 +42,8 @@ class WorkoutController: WKInterfaceController, WorkoutManagerDelegate, WCSessio
         }
     }
     
-    // MARK: Initialization
+    var workoutManager: WorkoutManager!
+    
     override init() {
         super.init()
         connectivitySession?.delegate = self
@@ -41,22 +51,26 @@ class WorkoutController: WKInterfaceController, WorkoutManagerDelegate, WCSessio
     }
     
     override func awake(withContext context: Any?) {
-        self.workoutManager = WorkoutManager(withReps: context! as! Int)
-        self.workoutManager.delegate = self
-        
         self.count = 0
         self.state = .up
+        
+        self.workoutManager = WorkoutManager(withDetector: PushupDetector())
+        self.workoutManager.delegate = self
     }
-    
-    // MARK: Interface Bindings
     
     @IBAction func start() {
-        controlButton.setEnabled(false)
-        WKInterfaceDevice().play(.start)
-        workoutManager.startWorkout()
+        if workoutInSession {
+            self.workoutManager.stopWorkout()
+            self.workoutInSession = false
+        } else {
+            WKInterfaceDevice().play(.start)
+            workoutManager.startWorkout()
+            self.workoutInSession = true
+        }
     }
+}
 
-    // MARK: WorkoutManagerDelegate
+extension WorkoutController: WorkoutManagerDelegate {
     func workoutStateUpdated(_ manager: WorkoutManager, repNumber: Int, state: State, workoutComplete: Bool) {
         print("\(repNumber), \(state.rawValue), \(workoutComplete)")
         DispatchQueue.main.async {
@@ -78,8 +92,7 @@ class WorkoutController: WKInterfaceController, WorkoutManagerDelegate, WCSessio
         // Write the workout data to documents in case it can't be transferred to the phone
         let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
                     
-        let sessionName = UUID().uuidString
-        let filePath = paths[0].appendingPathComponent("\(sessionName).json")
+        let filePath = paths[0].appendingPathComponent("\(self.WORKOUT_TYPE.rawValue)-\(Date().datetime).json")
         
         do {
             try sessionData.write(to: filePath)
@@ -90,21 +103,9 @@ class WorkoutController: WKInterfaceController, WorkoutManagerDelegate, WCSessio
         
         connectivitySession?.transferFile(filePath, metadata: nil)
     }
-    
-    func session(_ session: WCSession, didFinish fileTransfer: WCSessionFileTransfer, error: Error?) {
-        if let error = error {
-            // If there was an error in file transfer, save the file to UserDefaults so we can transfer it later
-            print(error.localizedDescription)
-            
-            let sessionName = fileTransfer.file.fileURL.lastPathComponent
-            var sessions = (UserDefaults.standard.array(forKey: "sessions") as? [String]) ?? []
-            sessions.append(sessionName)
-            UserDefaults.standard.set(sessions, forKey: "sessions")
-        } else {
-            print("File transferred successfully")
-        }
-    }
-    
+}
+
+extension WorkoutController: WCSessionFileTransferDelegate {
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
         if activationState == .activated {
             print("Session Activated")
@@ -114,8 +115,14 @@ class WorkoutController: WKInterfaceController, WorkoutManagerDelegate, WCSessio
             print("Session Deactivated")
         }
     }
-}
-
-enum State:String {
-    case up = "Up", down = "Down"
+    
+    func session(_ session: WCSession, didFinish fileTransfer: WCSessionFileTransfer, error: Error?) {
+        if let error = error {
+            // If there was an error in file transfer, save the file to UserDefaults so we can transfer it later
+            print(error.localizedDescription)
+            saveLocalFile(from: fileTransfer)
+        } else {
+            print("File transferred successfully")
+        }
+    }
 }

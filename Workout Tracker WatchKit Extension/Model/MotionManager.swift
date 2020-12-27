@@ -37,10 +37,16 @@ extension Date {
     var millisecondsSince1970:Int64 {
         return Int64((self.timeIntervalSince1970 * 1000.0).rounded())
     }
+    
+    var datetime: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd-MM-yyyy-HH:mm:ss"
+        return formatter.string(from: self)
+    }
 }
 
 protocol MotionManagerDelegate {
-    func didProcessDeviceMotion(_ motion: MotionData)
+    func didLog(_ motion: MotionData)
 }
 
 class MotionManager {
@@ -54,18 +60,10 @@ class MotionManager {
     
     // The app is using 50hz data and the buffer is going to hold 1s worth of data.
     let sampleInterval = 1.0 / 50
-    
-    var gravityStr = ""
-    var rotationRateStr = ""
-    var userAccelStr = ""
-    var attitudeStr = ""
-
-    var recentDetection = false
-    
+        
     var delegate: MotionManagerDelegate?
 
     // MARK: Initialization
-    
     init() {
         // Serial queue for sample handling and calculations.
         queue.maxConcurrentOperationCount = 1
@@ -73,7 +71,6 @@ class MotionManager {
     }
 
     // MARK: Motion Manager
-
     func startUpdates() {
         if !motionManager.isDeviceMotionAvailable {
             print("Device Motion is not available.")
@@ -91,7 +88,7 @@ class MotionManager {
             }
 
             if deviceMotion != nil {
-                self.processDeviceMotion(deviceMotion!)
+                self.log(deviceMotion!)
             }
         }
     }
@@ -103,7 +100,7 @@ class MotionManager {
     }
 
     // MARK: Motion Processing
-    func processDeviceMotion(_ deviceMotion: CMDeviceMotion) {
+    func log(_ deviceMotion: CMDeviceMotion) {
         let timestamp = Date().millisecondsSince1970
         
         let data = MotionData(timestamp: timestamp,
@@ -120,6 +117,6 @@ class MotionManager {
                               pitch: deviceMotion.attitude.pitch,
                               yaw: deviceMotion.attitude.yaw)
         
-        delegate?.didProcessDeviceMotion(data)
+        delegate?.didLog(data)
     }
 }

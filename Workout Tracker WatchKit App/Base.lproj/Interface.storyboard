@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="15705" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="kf0-D4-ZmQ">
+<document type="com.apple.InterfaceBuilder.WatchKit.Storyboard" version="3.0" toolsVersion="17701" targetRuntime="watchKit" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="MMm-tc-bQB">
     <device id="watch38"/>
     <dependencies>
         <deployment identifier="watchOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="15706"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="15501"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="17703"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBWatchKitPlugin" version="17500"/>
     </dependencies>
     <scenes>
-        <!--Workout Controller-->
+        <!--Calibration Controller-->
         <scene sceneID="aou-V4-d1y">
             <objects>
-                <controller id="AgC-eL-Hgc" customClass="WorkoutController" customModule="Workout_Tracker_WatchKit_App" customModuleProvider="target">
+                <controller id="AgC-eL-Hgc" customClass="CalibrationController" customModule="Workout_Tracker_WatchKit_App" customModuleProvider="target">
                     <items>
                         <label width="131" height="75" alignment="left" text="1" textAlignment="center" id="bN1-SW-gfC">
                             <color key="textColor" red="0.78856676816940308" green="0.0" blue="0.051597339167090257" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
@@ -31,7 +31,53 @@
                     </connections>
                 </controller>
             </objects>
-            <point key="canvasLocation" x="612" y="293"/>
+            <point key="canvasLocation" x="630" y="292"/>
+        </scene>
+        <!--Workout Controller-->
+        <scene sceneID="MsN-q6-DwV">
+            <objects>
+                <controller id="7vt-ef-stJ" customClass="WorkoutController" customModule="Workout_Tracker_WatchKit_Extension">
+                    <items>
+                        <label width="131" height="75" alignment="left" text="1" textAlignment="center" id="mhH-nV-7Gi">
+                            <color key="textColor" red="0.78856676820000005" green="0.0" blue="0.051597339169999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
+                            <fontDescription key="font" style="UICTFontTextStyleTitle1"/>
+                        </label>
+                        <label width="136" alignment="left" text="Down" textAlignment="center" id="kpd-gZ-UL0"/>
+                        <separator alignment="left" id="Er7-1O-aZB"/>
+                        <button width="1" alignment="left" title="Start" id="RW1-0s-wev">
+                            <connections>
+                                <action selector="start" destination="7vt-ef-stJ" id="av2-fH-aHq"/>
+                            </connections>
+                        </button>
+                    </items>
+                    <connections>
+                        <outlet property="controlButton" destination="RW1-0s-wev" id="K4I-Oh-Qm7"/>
+                        <outlet property="countLabel" destination="mhH-nV-7Gi" id="iYY-uI-BNc"/>
+                        <outlet property="stateLabel" destination="kpd-gZ-UL0" id="2LS-7t-bUH"/>
+                    </connections>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="285" y="-41"/>
+        </scene>
+        <!--Interface Controller-->
+        <scene sceneID="we6-du-do7">
+            <objects>
+                <controller id="MMm-tc-bQB">
+                    <items>
+                        <button width="1" alignment="left" title="Count" id="1hU-wQ-VU6">
+                            <connections>
+                                <segue destination="7vt-ef-stJ" kind="push" id="jgF-J6-sjk"/>
+                            </connections>
+                        </button>
+                        <button width="1" alignment="left" title="Calibrate" id="KtX-cU-f6U">
+                            <connections>
+                                <segue destination="kf0-D4-ZmQ" kind="push" identifier="calibrate" id="shu-zq-hk7"/>
+                            </connections>
+                        </button>
+                    </items>
+                </controller>
+            </objects>
+            <point key="canvasLocation" x="-112" y="292"/>
         </scene>
         <!--Rep Controller-->
         <scene sceneID="u7K-oj-FuP">
@@ -83,6 +129,6 @@
         </scene>
     </scenes>
     <inferredMetricsTieBreakers>
-        <segue reference="2mo-ZA-aQ5"/>
+        <segue reference="0bI-Y7-uKh"/>
     </inferredMetricsTieBreakers>
 </document>

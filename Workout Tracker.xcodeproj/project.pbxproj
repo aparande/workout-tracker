@@ -16,12 +16,16 @@
 		1F7C1DB323CE3C0300706C34 /* Workout Tracker WatchKit App.app in Embed Watch Content */ = {isa = PBXBuildFile; fileRef = 1F7C1DB223CE3C0300706C34 /* Workout Tracker WatchKit App.app */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 		1F7C1DBB23CE3C0400706C34 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F7C1DBA23CE3C0400706C34 /* Assets.xcassets */; };
 		1F7C1DC223CE3C0400706C34 /* Workout Tracker WatchKit Extension.appex in Embed App Extensions */ = {isa = PBXBuildFile; fileRef = 1F7C1DC123CE3C0400706C34 /* Workout Tracker WatchKit Extension.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
-		1F7C1DC723CE3C0400706C34 /* WorkoutController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7C1DC623CE3C0400706C34 /* WorkoutController.swift */; };
+		1F7C1DC723CE3C0400706C34 /* CalibrationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7C1DC623CE3C0400706C34 /* CalibrationController.swift */; };
 		1F7C1DC923CE3C0400706C34 /* ExtensionDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7C1DC823CE3C0400706C34 /* ExtensionDelegate.swift */; };
 		1F7C1DCB23CE3C0500706C34 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 1F7C1DCA23CE3C0500706C34 /* Assets.xcassets */; };
 		1F7C1DDC23CE3F9500706C34 /* WorkoutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7C1DDA23CE3F9500706C34 /* WorkoutManager.swift */; };
 		1F7C1DDD23CE3F9500706C34 /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7C1DDB23CE3F9500706C34 /* MotionManager.swift */; };
 		1F7C1DE023CE3FB000706C34 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F7C1DDE23CE3FB000706C34 /* Interface.storyboard */; };
+		1FD636812595272100BCA97F /* WCSessionFileTransferDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD636802595272100BCA97F /* WCSessionFileTransferDelegate.swift */; };
+		1FD6368E259539EE00BCA97F /* WorkoutController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD6368D259539EE00BCA97F /* WorkoutController.swift */; };
+		1FD6369325953D1200BCA97F /* CalibrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD6369225953D1200BCA97F /* CalibrationManager.swift */; };
+		1FD63698259543A800BCA97F /* PushupDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD63697259543A800BCA97F /* PushupDetector.swift */; };
 		1FF3599323CE4F0D00FA7BD5 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FF3599223CE4F0D00FA7BD5 /* HealthKit.framework */; };
 		1FF3599523CE528B00FA7BD5 /* RepController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF3599423CE528B00FA7BD5 /* RepController.swift */; };
 		1FF3599823CE5E3900FA7BD5 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FF3599723CE5E3900FA7BD5 /* HealthKit.framework */; };
@@ -82,13 +86,17 @@
 		1F7C1DBA23CE3C0400706C34 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1F7C1DBC23CE3C0400706C34 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1F7C1DC123CE3C0400706C34 /* Workout Tracker WatchKit Extension.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = "Workout Tracker WatchKit Extension.appex"; sourceTree = BUILT_PRODUCTS_DIR; };
-		1F7C1DC623CE3C0400706C34 /* WorkoutController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutController.swift; sourceTree = "<group>"; };
+		1F7C1DC623CE3C0400706C34 /* CalibrationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationController.swift; sourceTree = "<group>"; };
 		1F7C1DC823CE3C0400706C34 /* ExtensionDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ExtensionDelegate.swift; sourceTree = "<group>"; };
 		1F7C1DCA23CE3C0500706C34 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		1F7C1DCC23CE3C0500706C34 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		1F7C1DDA23CE3F9500706C34 /* WorkoutManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkoutManager.swift; sourceTree = "<group>"; };
 		1F7C1DDB23CE3F9500706C34 /* MotionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionManager.swift; sourceTree = "<group>"; };
 		1F7C1DDF23CE3FB000706C34 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
+		1FD636802595272100BCA97F /* WCSessionFileTransferDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WCSessionFileTransferDelegate.swift; sourceTree = "<group>"; };
+		1FD6368D259539EE00BCA97F /* WorkoutController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutController.swift; sourceTree = "<group>"; };
+		1FD6369225953D1200BCA97F /* CalibrationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationManager.swift; sourceTree = "<group>"; };
+		1FD63697259543A800BCA97F /* PushupDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushupDetector.swift; sourceTree = "<group>"; };
 		1FF3599023CE4F0D00FA7BD5 /* Workout Tracker.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Workout Tracker.entitlements"; sourceTree = "<group>"; };
 		1FF3599223CE4F0D00FA7BD5 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		1FF3599423CE528B00FA7BD5 /* RepController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepController.swift; sourceTree = "<group>"; };
@@ -166,15 +174,35 @@
 			isa = PBXGroup;
 			children = (
 				1FF3599623CE5E3800FA7BD5 /* Workout Tracker WatchKit Extension.entitlements */,
-				1F7C1DDB23CE3F9500706C34 /* MotionManager.swift */,
-				1F7C1DDA23CE3F9500706C34 /* WorkoutManager.swift */,
-				1F7C1DC623CE3C0400706C34 /* WorkoutController.swift */,
+				1FD6368B259539BB00BCA97F /* Model */,
+				1FD6368C259539CB00BCA97F /* Controllers */,
 				1F7C1DC823CE3C0400706C34 /* ExtensionDelegate.swift */,
 				1F7C1DCA23CE3C0500706C34 /* Assets.xcassets */,
 				1F7C1DCC23CE3C0500706C34 /* Info.plist */,
-				1FF3599423CE528B00FA7BD5 /* RepController.swift */,
 			);
 			path = "Workout Tracker WatchKit Extension";
+			sourceTree = "<group>";
+		};
+		1FD6368B259539BB00BCA97F /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				1F7C1DDB23CE3F9500706C34 /* MotionManager.swift */,
+				1F7C1DDA23CE3F9500706C34 /* WorkoutManager.swift */,
+				1FD636802595272100BCA97F /* WCSessionFileTransferDelegate.swift */,
+				1FD6369225953D1200BCA97F /* CalibrationManager.swift */,
+				1FD63697259543A800BCA97F /* PushupDetector.swift */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		1FD6368C259539CB00BCA97F /* Controllers */ = {
+			isa = PBXGroup;
+			children = (
+				1F7C1DC623CE3C0400706C34 /* CalibrationController.swift */,
+				1FF3599423CE528B00FA7BD5 /* RepController.swift */,
+				1FD6368D259539EE00BCA97F /* WorkoutController.swift */,
+			);
+			path = Controllers;
 			sourceTree = "<group>";
 		};
 		1FF3599123CE4F0D00FA7BD5 /* Frameworks */ = {
@@ -328,10 +356,14 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1FD636812595272100BCA97F /* WCSessionFileTransferDelegate.swift in Sources */,
 				1F7C1DC923CE3C0400706C34 /* ExtensionDelegate.swift in Sources */,
-				1F7C1DC723CE3C0400706C34 /* WorkoutController.swift in Sources */,
+				1F7C1DC723CE3C0400706C34 /* CalibrationController.swift in Sources */,
 				1F7C1DDC23CE3F9500706C34 /* WorkoutManager.swift in Sources */,
+				1FD6368E259539EE00BCA97F /* WorkoutController.swift in Sources */,
 				1F7C1DDD23CE3F9500706C34 /* MotionManager.swift in Sources */,
+				1FD63698259543A800BCA97F /* PushupDetector.swift in Sources */,
+				1FD6369325953D1200BCA97F /* CalibrationManager.swift in Sources */,
 				1FF3599523CE528B00FA7BD5 /* RepController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -434,6 +466,7 @@
 				MTL_FAST_MATH = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				STRIP_BITCODE_FROM_COPIED_FILES = NO;
 				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
 				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
@@ -487,6 +520,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				MTL_FAST_MATH = YES;
 				SDKROOT = iphoneos;
+				STRIP_BITCODE_FROM_COPIED_FILES = NO;
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				VALIDATE_PRODUCT = YES;

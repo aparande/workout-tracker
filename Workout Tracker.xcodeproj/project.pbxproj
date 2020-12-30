@@ -7,6 +7,12 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1F081A64259AC61700D2B6C7 /* DifferenceFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F081A63259AC61700D2B6C7 /* DifferenceFilter.swift */; };
+		1F081A6A259AC9A000D2B6C7 /* Filter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F081A69259AC9A000D2B6C7 /* Filter.swift */; };
+		1F081A6F259ACADC00D2B6C7 /* MaximumFilter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F081A6E259ACADC00D2B6C7 /* MaximumFilter.swift */; };
+		1F393679259BD9A800114038 /* MockCMMotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F393678259BD9A800114038 /* MockCMMotionManager.swift */; };
+		1F39367E259BDB5700114038 /* calibration.json in Resources */ = {isa = PBXBuildFile; fileRef = 1F39367D259BDB5700114038 /* calibration.json */; };
+		1F7BF7BC259D2BA200B25B48 /* Helpers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7BF7BB259D2BA200B25B48 /* Helpers.swift */; };
 		1F7C1DA223CE3BFE00706C34 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7C1DA123CE3BFE00706C34 /* AppDelegate.swift */; };
 		1F7C1DA423CE3BFE00706C34 /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7C1DA323CE3BFE00706C34 /* SceneDelegate.swift */; };
 		1F7C1DA623CE3BFE00706C34 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7C1DA523CE3BFE00706C34 /* ViewController.swift */; };
@@ -22,10 +28,12 @@
 		1F7C1DDC23CE3F9500706C34 /* WorkoutManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7C1DDA23CE3F9500706C34 /* WorkoutManager.swift */; };
 		1F7C1DDD23CE3F9500706C34 /* MotionManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1F7C1DDB23CE3F9500706C34 /* MotionManager.swift */; };
 		1F7C1DE023CE3FB000706C34 /* Interface.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 1F7C1DDE23CE3FB000706C34 /* Interface.storyboard */; };
+		1FAFDA99259BAC9300F5D33F /* Structs.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FAFDA98259BAC9300F5D33F /* Structs.swift */; };
+		1FAFDA9E259BACFD00F5D33F /* Enums.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FAFDA9D259BACFD00F5D33F /* Enums.swift */; };
 		1FD636812595272100BCA97F /* WCSessionFileTransferDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD636802595272100BCA97F /* WCSessionFileTransferDelegate.swift */; };
 		1FD6368E259539EE00BCA97F /* WorkoutController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD6368D259539EE00BCA97F /* WorkoutController.swift */; };
 		1FD6369325953D1200BCA97F /* CalibrationManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD6369225953D1200BCA97F /* CalibrationManager.swift */; };
-		1FD63698259543A800BCA97F /* PushupDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD63697259543A800BCA97F /* PushupDetector.swift */; };
+		1FD63698259543A800BCA97F /* RepDetector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FD63697259543A800BCA97F /* RepDetector.swift */; };
 		1FF3599323CE4F0D00FA7BD5 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FF3599223CE4F0D00FA7BD5 /* HealthKit.framework */; };
 		1FF3599523CE528B00FA7BD5 /* RepController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1FF3599423CE528B00FA7BD5 /* RepController.swift */; };
 		1FF3599823CE5E3900FA7BD5 /* HealthKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 1FF3599723CE5E3900FA7BD5 /* HealthKit.framework */; };
@@ -74,6 +82,12 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		1F081A63259AC61700D2B6C7 /* DifferenceFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DifferenceFilter.swift; sourceTree = "<group>"; };
+		1F081A69259AC9A000D2B6C7 /* Filter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Filter.swift; sourceTree = "<group>"; };
+		1F081A6E259ACADC00D2B6C7 /* MaximumFilter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaximumFilter.swift; sourceTree = "<group>"; };
+		1F393678259BD9A800114038 /* MockCMMotionManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MockCMMotionManager.swift; sourceTree = "<group>"; };
+		1F39367D259BDB5700114038 /* calibration.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = calibration.json; sourceTree = "<group>"; };
+		1F7BF7BB259D2BA200B25B48 /* Helpers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Helpers.swift; sourceTree = "<group>"; };
 		1F7C1D9E23CE3BFE00706C34 /* Workout Tracker.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Workout Tracker.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		1F7C1DA123CE3BFE00706C34 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		1F7C1DA323CE3BFE00706C34 /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -93,10 +107,12 @@
 		1F7C1DDA23CE3F9500706C34 /* WorkoutManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = WorkoutManager.swift; sourceTree = "<group>"; };
 		1F7C1DDB23CE3F9500706C34 /* MotionManager.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MotionManager.swift; sourceTree = "<group>"; };
 		1F7C1DDF23CE3FB000706C34 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Interface.storyboard; sourceTree = "<group>"; };
+		1FAFDA98259BAC9300F5D33F /* Structs.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Structs.swift; sourceTree = "<group>"; };
+		1FAFDA9D259BACFD00F5D33F /* Enums.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Enums.swift; sourceTree = "<group>"; };
 		1FD636802595272100BCA97F /* WCSessionFileTransferDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WCSessionFileTransferDelegate.swift; sourceTree = "<group>"; };
 		1FD6368D259539EE00BCA97F /* WorkoutController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WorkoutController.swift; sourceTree = "<group>"; };
 		1FD6369225953D1200BCA97F /* CalibrationManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CalibrationManager.swift; sourceTree = "<group>"; };
-		1FD63697259543A800BCA97F /* PushupDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PushupDetector.swift; sourceTree = "<group>"; };
+		1FD63697259543A800BCA97F /* RepDetector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepDetector.swift; sourceTree = "<group>"; };
 		1FF3599023CE4F0D00FA7BD5 /* Workout Tracker.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Workout Tracker.entitlements"; sourceTree = "<group>"; };
 		1FF3599223CE4F0D00FA7BD5 /* HealthKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = HealthKit.framework; path = System/Library/Frameworks/HealthKit.framework; sourceTree = SDKROOT; };
 		1FF3599423CE528B00FA7BD5 /* RepController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepController.swift; sourceTree = "<group>"; };
@@ -124,6 +140,16 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		1F081A68259AC98500D2B6C7 /* Filters */ = {
+			isa = PBXGroup;
+			children = (
+				1F081A63259AC61700D2B6C7 /* DifferenceFilter.swift */,
+				1F081A69259AC9A000D2B6C7 /* Filter.swift */,
+				1F081A6E259ACADC00D2B6C7 /* MaximumFilter.swift */,
+			);
+			path = Filters;
+			sourceTree = "<group>";
+		};
 		1F7C1D9523CE3BFE00706C34 = {
 			isa = PBXGroup;
 			children = (
@@ -178,6 +204,7 @@
 				1FD6368C259539CB00BCA97F /* Controllers */,
 				1F7C1DC823CE3C0400706C34 /* ExtensionDelegate.swift */,
 				1F7C1DCA23CE3C0500706C34 /* Assets.xcassets */,
+				1F39367D259BDB5700114038 /* calibration.json */,
 				1F7C1DCC23CE3C0500706C34 /* Info.plist */,
 			);
 			path = "Workout Tracker WatchKit Extension";
@@ -190,7 +217,12 @@
 				1F7C1DDA23CE3F9500706C34 /* WorkoutManager.swift */,
 				1FD636802595272100BCA97F /* WCSessionFileTransferDelegate.swift */,
 				1FD6369225953D1200BCA97F /* CalibrationManager.swift */,
-				1FD63697259543A800BCA97F /* PushupDetector.swift */,
+				1FD63697259543A800BCA97F /* RepDetector.swift */,
+				1F081A68259AC98500D2B6C7 /* Filters */,
+				1FAFDA98259BAC9300F5D33F /* Structs.swift */,
+				1FAFDA9D259BACFD00F5D33F /* Enums.swift */,
+				1F393678259BD9A800114038 /* MockCMMotionManager.swift */,
+				1F7BF7BB259D2BA200B25B48 /* Helpers.swift */,
 			);
 			path = Model;
 			sourceTree = "<group>";
@@ -335,6 +367,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				1F39367E259BDB5700114038 /* calibration.json in Resources */,
 				1F7C1DCB23CE3C0500706C34 /* Assets.xcassets in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -358,11 +391,18 @@
 			files = (
 				1FD636812595272100BCA97F /* WCSessionFileTransferDelegate.swift in Sources */,
 				1F7C1DC923CE3C0400706C34 /* ExtensionDelegate.swift in Sources */,
+				1FAFDA99259BAC9300F5D33F /* Structs.swift in Sources */,
+				1F081A6A259AC9A000D2B6C7 /* Filter.swift in Sources */,
+				1FAFDA9E259BACFD00F5D33F /* Enums.swift in Sources */,
 				1F7C1DC723CE3C0400706C34 /* CalibrationController.swift in Sources */,
+				1F393679259BD9A800114038 /* MockCMMotionManager.swift in Sources */,
 				1F7C1DDC23CE3F9500706C34 /* WorkoutManager.swift in Sources */,
 				1FD6368E259539EE00BCA97F /* WorkoutController.swift in Sources */,
+				1F081A6F259ACADC00D2B6C7 /* MaximumFilter.swift in Sources */,
 				1F7C1DDD23CE3F9500706C34 /* MotionManager.swift in Sources */,
-				1FD63698259543A800BCA97F /* PushupDetector.swift in Sources */,
+				1F7BF7BC259D2BA200B25B48 /* Helpers.swift in Sources */,
+				1F081A64259AC61700D2B6C7 /* DifferenceFilter.swift in Sources */,
+				1FD63698259543A800BCA97F /* RepDetector.swift in Sources */,
 				1FD6369325953D1200BCA97F /* CalibrationManager.swift in Sources */,
 				1FF3599523CE528B00FA7BD5 /* RepController.swift in Sources */,
 			);

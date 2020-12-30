@@ -9,16 +9,8 @@
 import WatchKit
 import WatchConnectivity
 
-enum State:String {
-    case up = "Up", down = "Down"
-}
-
-enum SessionType:String {
-    case counting, calibration
-}
-
-class WorkoutController: WKInterfaceController {
-    let WORKOUT_TYPE: SessionType = .counting
+class WorkoutController: WKInterfaceController, WorkoutManagerDelegate {
+    var WORKOUT_TYPE: SessionType { return .counting }
     
     @IBOutlet weak var countLabel: WKInterfaceLabel!
     @IBOutlet weak var stateLabel: WKInterfaceLabel!
@@ -42,7 +34,7 @@ class WorkoutController: WKInterfaceController {
         }
     }
     
-    var workoutManager: WorkoutManager!
+    var workoutManager: WorkoutManager?
     
     override init() {
         super.init()
@@ -54,28 +46,28 @@ class WorkoutController: WKInterfaceController {
         self.count = 0
         self.state = .up
         
-        self.workoutManager = WorkoutManager(withDetector: PushupDetector())
-        self.workoutManager.delegate = self
+        guard let calibrationData = UserDefaults.standard.data(forKey: "calibration") else { return }
+        guard let calibration = try? PropertyListDecoder().decode(Calibration.self, from: calibrationData) else { return }
+        self.workoutManager = WorkoutManager(withDetector: RepDetector(withCalibration: calibration))
+        self.workoutManager?.delegate = self
     }
     
     @IBAction func start() {
         if workoutInSession {
-            self.workoutManager.stopWorkout()
+            self.workoutManager?.stopWorkout()
             self.workoutInSession = false
         } else {
             WKInterfaceDevice().play(.start)
-            workoutManager.startWorkout()
+            workoutManager?.startWorkout()
             self.workoutInSession = true
         }
     }
-}
-
-extension WorkoutController: WorkoutManagerDelegate {
+    
     func workoutStateUpdated(_ manager: WorkoutManager, repNumber: Int, state: State, workoutComplete: Bool) {
         print("\(repNumber), \(state.rawValue), \(workoutComplete)")
         DispatchQueue.main.async {
             if workoutComplete {
-                self.workoutManager.stopWorkout()
+                self.workoutManager?.stopWorkout()
                 self.controlButton.setEnabled(true)
             } else {
                 WKInterfaceDevice().play(.click)
@@ -86,22 +78,10 @@ extension WorkoutController: WorkoutManagerDelegate {
         }
     }
     
-    func workoutEnded(_ manager: WorkoutManager, sessionData: Data?) {
-        guard let sessionData = sessionData else { return }
+    func workoutEnded(_ manager: WorkoutManager, sessionData: [MotionData]?) {
+        // Encode the session data as JSON
         
-        // Write the workout data to documents in case it can't be transferred to the phone
-        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-                    
-        let filePath = paths[0].appendingPathComponent("\(self.WORKOUT_TYPE.rawValue)-\(Date().datetime).json")
-        
-        do {
-            try sessionData.write(to: filePath)
-        } catch {
-            print(error.localizedDescription)
-            return
-        }
-        
-        connectivitySession?.transferFile(filePath, metadata: nil)
+        try? self.save(jsonData: sessionData, toFileNamed: "\(self.WORKOUT_TYPE.rawValue)-\(Date().datetime)")
     }
 }
 

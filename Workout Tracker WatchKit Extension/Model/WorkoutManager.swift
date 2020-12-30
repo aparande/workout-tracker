@@ -12,7 +12,7 @@ import HealthKit
 
 protocol WorkoutManagerDelegate: AnyObject {
     func workoutStateUpdated(_ manager: WorkoutManager, repNumber: Int, state: State, workoutComplete: Bool)
-    func workoutEnded(_ manager: WorkoutManager, sessionData: Data?)
+    func workoutEnded(_ manager: WorkoutManager, sessionData: [MotionData]?)
 }
 
 class WorkoutManager: MotionManagerDelegate {
@@ -28,11 +28,11 @@ class WorkoutManager: MotionManagerDelegate {
     
     var motionData:[MotionData] = []
     
-    var detector: PushupDetector?
+    var detector: RepDetector?
 
     // MARK: Initialization
     
-    init(withDetector detector: PushupDetector?) {
+    init(withDetector detector: RepDetector?) {
         self.repNumber = 0
         self.state = .up
         
@@ -80,14 +80,7 @@ class WorkoutManager: MotionManagerDelegate {
         // Clear the workout session.
         session = nil
         
-        // Encode the session data as JSON
-        let encoder = JSONEncoder()
-        do {
-            let json = try encoder.encode(self.motionData)
-            self.delegate?.workoutEnded(self, sessionData: json)
-        } catch {
-            print(error.localizedDescription)
-        }
+        self.delegate?.workoutEnded(self, sessionData: motionData)
     }
     
     // Motion Manager delegate called when motion data is processed from the buffer

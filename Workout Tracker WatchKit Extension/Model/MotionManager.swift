@@ -12,27 +12,6 @@ import CoreMotion
 import WatchKit
 import os.log
 
-struct MotionData: Codable {
-    let timestamp: Int64
-    var state: String? = nil
-    
-    let gravityX: Double
-    let gravityY: Double
-    let gravityZ: Double
-    
-    let accelX: Double
-    let accelY: Double
-    let accelZ: Double
-    
-    let rotX: Double
-    let rotY: Double
-    let rotZ: Double
-    
-    let roll: Double
-    let pitch: Double
-    let yaw: Double
-}
-
 extension Date {
     var millisecondsSince1970:Int64 {
         return Int64((self.timeIntervalSince1970 * 1000.0).rounded())
@@ -52,7 +31,7 @@ protocol MotionManagerDelegate {
 class MotionManager {
     // MARK: Properties
     
-    let motionManager = CMMotionManager()
+    let motionManager: DeviceMotionManager
     let queue = OperationQueue()
     let wristLocationIsLeft = WKInterfaceDevice.current().wristLocation == .left
 
@@ -68,6 +47,12 @@ class MotionManager {
         // Serial queue for sample handling and calculations.
         queue.maxConcurrentOperationCount = 1
         queue.name = "MotionManagerQueue"
+        
+        #if targetEnvironment(simulator)
+        motionManager = MockCMMotionManager()
+        #else
+        motionManager = CMMotionManager()
+        #endif
     }
 
     // MARK: Motion Manager
@@ -82,6 +67,12 @@ class MotionManager {
         motionManager.deviceMotionUpdateInterval = sampleInterval
         
         // Start writing motion data to the processing buffer
+        #if targetEnvironment(simulator)
+        motionManager.startMockedUpdates { (data) in
+            guard let data = data else { return }
+            self.delegate?.didLog(data)
+        }
+        #else
         motionManager.startDeviceMotionUpdates(to: queue) { (deviceMotion: CMDeviceMotion?, error: Error?) in
             if error != nil {
                 print("Encountered error: \(error!)")
@@ -91,6 +82,8 @@ class MotionManager {
                 self.log(deviceMotion!)
             }
         }
+        #endif
+        
     }
 
     func stopUpdates() {

@@ -14,6 +14,8 @@ protocol WCSessionFileTransferDelegate: WCSessionDelegate {
     
     func saveLocalFile(from fileTransfer: WCSessionFileTransfer)
     func transferLocalFiles()
+    
+    func save<T>(jsonData: T, toFileNamed name: String) throws where T : Encodable
 }
 
 extension WCSessionFileTransferDelegate {
@@ -35,5 +37,23 @@ extension WCSessionFileTransferDelegate {
             connectivitySession?.transferFile(filePath, metadata: nil)
         }
         UserDefaults.standard.set([], forKey: "sessions")
+    }
+    
+    func save<T>(jsonData: T, toFileNamed name: String) throws where T : Encodable {
+        let encoder = JSONEncoder()
+        let data = try encoder.encode(jsonData)
+        
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+                            
+        let filePath = paths[0].appendingPathComponent("\(name).json")
+        
+        do {
+            try data.write(to: filePath)
+        } catch {
+            print(error.localizedDescription)
+            return
+        }
+        
+        connectivitySession?.transferFile(filePath, metadata: nil)
     }
 }

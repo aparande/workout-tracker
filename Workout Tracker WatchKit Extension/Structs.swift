@@ -41,3 +41,8 @@ struct WorkoutData: Codable {
     let calibration: Calibration
     let motion: [MotionData]
 }
+
+struct Exercise: Codable {
+    let name: String
+    let calibration: Calibration
+}

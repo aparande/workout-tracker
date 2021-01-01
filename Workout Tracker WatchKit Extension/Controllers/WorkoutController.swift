@@ -46,9 +46,8 @@ class WorkoutController: WKInterfaceController, WorkoutManagerDelegate {
         self.count = 0
         self.state = .up
         
-        guard let calibrationData = UserDefaults.standard.data(forKey: "calibration") else { return }
-        guard let calibration = try? PropertyListDecoder().decode(Calibration.self, from: calibrationData) else { return }
-        self.workoutManager = WorkoutManager(withDetector: RepDetector(withCalibration: calibration))
+        guard let exercise = context as? Exercise else { return }
+        self.workoutManager = WorkoutManager(withDetector: RepDetector(withCalibration: exercise.calibration))
         self.workoutManager?.delegate = self
     }
     

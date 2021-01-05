@@ -8,10 +8,14 @@
 
 import Foundation
 
+/** Generic protocol which all filters follow */
 protocol Filter {
     var memory: [Double] { get set }
     var hasBoundaryEffect: Bool { get }
     
+    /** Get the output given an input */
     mutating func filter(_ x: Double) -> Double
+    
+    /** Causally filter an array of data */
     mutating func filter(signal: [Double]) -> [Double]
 }

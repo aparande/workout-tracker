@@ -9,7 +9,7 @@
 import Foundation
 
 enum State:String {
-    case up = "Up", down = "Down"
+    case rest, flexed
 }
 
 enum SessionType:String {

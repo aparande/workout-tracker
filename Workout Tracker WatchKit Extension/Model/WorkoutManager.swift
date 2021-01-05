@@ -1,22 +1,20 @@
 /*
- Copyright (C) 2016 Apple Inc. All Rights Reserved.
- See LICENSE.txt for this sample’s licensing information
- 
- Abstract:
- This class manages the HealthKit interactions and provides a delegate 
-         to indicate changes in data.
+ A super class which manages the user's workout. If initialized with a detector, it will detect repetitions
+ Based on https://developer.apple.com/library/archive/samplecode/SwingWatch/Listings/SwingWatch_WatchKit_Extension_WorkoutManager_swift.html#//apple_ref/doc/uid/TP40017286-SwingWatch_WatchKit_Extension_WorkoutManager_swift-DontLinkElementID_11
  */
 
 import Foundation
 import HealthKit
 
 protocol WorkoutManagerDelegate: AnyObject {
+    /** Delegate method called when something about the workout has been updated */
     func workoutStateUpdated(_ manager: WorkoutManager, repNumber: Int, state: State, workoutComplete: Bool)
+    
+    /** Called when a workout is ended */
     func workoutEnded(_ manager: WorkoutManager, sessionData: [MotionData]?)
 }
 
 class WorkoutManager: MotionManagerDelegate {
-    // MARK: Properties
     let motionManager = MotionManager()
     let healthStore = HKHealthStore()
 
@@ -29,19 +27,18 @@ class WorkoutManager: MotionManagerDelegate {
     var motionData:[MotionData] = []
     
     var detector: RepDetector?
-
-    // MARK: Initialization
     
     init(withDetector detector: RepDetector?) {
         self.repNumber = 0
-        self.state = .up
+        self.state = .rest
         
         self.motionManager.delegate = self
         self.detector = detector
     }
-
-    // MARK: WorkoutManager
     
+    /**
+     Begin the workout
+     */
     func startWorkout() {
         // If we have already started the workout, then do nothing.
         if (session != nil) {
@@ -49,12 +46,12 @@ class WorkoutManager: MotionManagerDelegate {
         }
         
         self.repNumber = 0
-        self.state = .up
+        self.state = .rest
 
         // Configure the workout session.
         let workoutConfiguration = HKWorkoutConfiguration()
-        workoutConfiguration.activityType = .tennis // Hopefully makes accelerometer data more accurate
-        workoutConfiguration.locationType = .outdoor
+        workoutConfiguration.activityType = .traditionalStrengthTraining
+        workoutConfiguration.locationType = .unknown
 
         do {
             session = try HKWorkoutSession(configuration: workoutConfiguration)
@@ -67,6 +64,9 @@ class WorkoutManager: MotionManagerDelegate {
         motionManager.startUpdates()
     }
 
+    /**
+     End the workout
+     */
     func stopWorkout() {
         // If we have already stopped the workout, then do nothing.
         if (session == nil) {
@@ -83,23 +83,33 @@ class WorkoutManager: MotionManagerDelegate {
         self.delegate?.workoutEnded(self, sessionData: motionData)
     }
     
-    // Motion Manager delegate called when motion data is processed from the buffer
+    /**
+     Handle data logged by the motion manager (MotionManagerDelegate method)
+     */
     func didLog(_ motion: MotionData) {
         var motion = motion
+        
+        // Augment the data with the current state
         motion.state = self.state.rawValue
         self.motionData.append(motion)
         
         self.process(motion)
     }
     
+    /**
+     Process data by running it through the detector (if applicable)
+     */
     func process(_ motion: MotionData) {
+        // If the detector detects a new state, potentially increment our state
         if let newState = detector?.detect(from: motion), newState != self.state {
             self.state = newState
             
-            if self.state == .up {
+            // Count only a full repetition (i.e from down to up)
+            if self.state == .rest {
                 self.repNumber += 1
             }
             
+            // Notify the delegate the state has been updated
             delegate?.workoutStateUpdated(self, repNumber: repNumber, state: newState, workoutComplete: false)
         }
     }

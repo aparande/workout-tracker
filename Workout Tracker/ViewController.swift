@@ -20,13 +20,7 @@ class ViewController: UITableViewController, WCSessionDelegate {
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder)
-        
-        if let _ = session {
-            
-        } else {
-            print("not supported")
-        }
-        
+                
         // Setup a Watch Connection Session
         session?.delegate = self
         session?.activate()
@@ -37,9 +31,6 @@ class ViewController: UITableViewController, WCSessionDelegate {
         
         // Load the files already saved
         self.files = (try? FileManager.default.contentsOfDirectory(at: fileDirectory, includingPropertiesForKeys: nil, options: .producesRelativePathURLs)) ?? []
-        for file in self.files {
-            print(file.absoluteString)
-        }
     }
     
     override func tableView(_ tableView: UITableView, commit editingStyle: UITableViewCell.EditingStyle, forRowAt indexPath: IndexPath) {
@@ -88,31 +79,6 @@ class ViewController: UITableViewController, WCSessionDelegate {
             }
         } catch {
             print(error.localizedDescription)
-        }
-    }
-    
-    /**
-     Delegate method called when a message is received from the watch
-     */
-    func session(_ session: WCSession, didReceiveMessageData messageData: Data) {
-        let sessionName = UUID().uuidString
-        
-        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
-        let directoryPath = paths[0].appendingPathComponent("\(sessionName).json")
-        
-        do {
-            try messageData.write(to: directoryPath)
-            
-            files.append(directoryPath)
-            
-            DispatchQueue.main.async {
-                self.tableView.reloadData()
-            }
-        } catch {
-            print(error.localizedDescription)
-            let alertView = UIAlertController(title: "Error", message: "Couldnt save session", preferredStyle: .alert)
-            alertView.addAction(UIAlertAction(title: "Ok", style: .cancel, handler: nil))
-            self.present(alertView, animated: true, completion: nil)
         }
     }
     

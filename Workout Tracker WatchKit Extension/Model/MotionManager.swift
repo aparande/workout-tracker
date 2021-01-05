@@ -1,10 +1,7 @@
 /*
- Copyright (C) 2016 Apple Inc. All Rights Reserved.
- See LICENSE.txt for this sample’s licensing information
+Adapted from https://developer.apple.com/library/archive/samplecode/SwingWatch/Listings/SwingWatch_WatchKit_Extension_MotionManager_swift.html#//apple_ref/doc/uid/TP40017286-SwingWatch_WatchKit_Extension_MotionManager_swift-DontLinkElementID_9
  
- Abstract:
- This class manages the CoreMotion interactions and 
-         provides a delegate to indicate changes in data.
+Class to grab motion data from the watch
  */
 
 import Foundation
@@ -12,39 +9,21 @@ import CoreMotion
 import WatchKit
 import os.log
 
-extension Date {
-    var millisecondsSince1970:Int64 {
-        return Int64((self.timeIntervalSince1970 * 1000.0).rounded())
-    }
-    
-    var datetime: String {
-        let formatter = DateFormatter()
-        formatter.dateFormat = "dd-MM-yyyy-HH:mm:ss"
-        return formatter.string(from: self)
-    }
-}
-
 protocol MotionManagerDelegate {
     func didLog(_ motion: MotionData)
 }
 
 class MotionManager {
-    // MARK: Properties
-    
     let motionManager: DeviceMotionManager
     let queue = OperationQueue()
     let wristLocationIsLeft = WKInterfaceDevice.current().wristLocation == .left
-
-    // MARK: Application Specific Constants
     
-    // The app is using 50hz data and the buffer is going to hold 1s worth of data.
+    // The app is using 50hz data
     let sampleInterval = 1.0 / 50
         
     var delegate: MotionManagerDelegate?
 
-    // MARK: Initialization
     init() {
-        // Serial queue for sample handling and calculations.
         queue.maxConcurrentOperationCount = 1
         queue.name = "MotionManagerQueue"
         
@@ -55,7 +34,9 @@ class MotionManager {
         #endif
     }
 
-    // MARK: Motion Manager
+    /**
+     Start collecting motion data
+     */
     func startUpdates() {
         if !motionManager.isDeviceMotionAvailable {
             print("Device Motion is not available.")
@@ -78,21 +59,26 @@ class MotionManager {
                 print("Encountered error: \(error!)")
             }
 
-            if deviceMotion != nil {
-                self.log(deviceMotion!)
+            if let motion = deviceMotion {
+                self.log(motion)
             }
         }
         #endif
         
     }
 
+    /**
+     Stop collecting motion data
+     */
     func stopUpdates() {
         if motionManager.isDeviceMotionAvailable {
             motionManager.stopDeviceMotionUpdates()
         }
     }
 
-    // MARK: Motion Processing
+    /**
+     Log motion data
+     */
     func log(_ deviceMotion: CMDeviceMotion) {
         let timestamp = Date().millisecondsSince1970
         

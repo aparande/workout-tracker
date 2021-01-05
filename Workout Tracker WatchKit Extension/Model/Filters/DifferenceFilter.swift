@@ -8,18 +8,27 @@
 
 import Foundation
 
+/**
+ Struct for a difference filter
+ Impulse response is h[n] = delta[n] - delta[n-1] if direction is positive
+ Impulse response is h[n] = -delta[n] + delta[n-1] if direction is negative
+ */
 struct DifferenceFilter: Filter {
+    /**
+     Encode the direction of the filter
+     */
     enum Direction: Int, Codable {
         case positive = 1, negative = -1
         
         static let all:[Direction] = [.positive, .negative]
     }
     
+    /** Difference filters only require 1 unit of memory */
     var memory: [Double] = [0]
     let direction: Direction
     
+    /** If we have filtered 1 value or fewer, our output is invalid */
     var hasBoundaryEffect: Bool { return filteredValues <= 1 }
-    
     private var filteredValues: Int = 0
 
     init(withDirection direction: Direction) {

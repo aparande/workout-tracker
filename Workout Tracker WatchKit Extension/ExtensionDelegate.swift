@@ -11,12 +11,9 @@ import WatchConnectivity
 
 class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionFileTransferDelegate {
     func applicationDidFinishLaunching() {
-        // Perform any final initialization of your application.
+        // Check if there are any sessions that haven't been transferred
         let sessions = (UserDefaults.standard.array(forKey: "sessions") as? [String]) ?? []
         print("Found \(sessions.count) unsaved files")
-        for sess in sessions {
-            print(sess)
-        }
         
         connectivitySession?.delegate = self
         connectivitySession?.activate()
@@ -41,6 +38,7 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionFileTransferDel
     func session(_ session: WCSession, didFinish fileTransfer: WCSessionFileTransfer, error: Error?) {
         if let error = error {
             print(error.localizedDescription)
+            // Save the file to the watch for transfer later if the file transfer fails
             saveLocalFile(from: fileTransfer)
         } else {
             print("File transferred successfully")
@@ -49,6 +47,7 @@ class ExtensionDelegate: NSObject, WKExtensionDelegate, WCSessionFileTransferDel
     
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
         if activationState == .activated {
+            // Transfer local files upon session activation
             transferLocalFiles()
         } else if activationState == .inactive {
             print("Session Inactive")

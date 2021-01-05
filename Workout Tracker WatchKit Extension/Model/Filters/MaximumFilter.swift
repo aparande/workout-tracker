@@ -8,11 +8,16 @@
 
 import Foundation
 
+/**
+ Struct for a Maximum Filter.
+ This filter considers the magnitude when taking the maximum (i.e absolute value), but its output maintains the same sign.
+ */
 struct MaximumFilter: Filter {
     var memory: [Double]
     private var absMemory: [Double]
     
-    var hasBoundaryEffect: Bool { return filteredValues <= 25 }
+    // If the memory buffer is not full, then there is a boundary effect
+    var hasBoundaryEffect: Bool { return filteredValues <= memory.count }
     
     private var filteredValues: Int = 0
     
@@ -22,15 +27,18 @@ struct MaximumFilter: Filter {
     }
     
     mutating func filter(_ x: Double) -> Double {
+        // Remove a value from memory
         let _ = memory.removeFirst()
         let _ = absMemory.removeFirst()
         
+        // Add the current value to memory
         memory.append(x)
         absMemory.append(abs(x))
         
         filteredValues += 1
         
-        guard let maxIdx = absMemory.argmax() else { return 0}
+        // Find the absolute maximum and then return that value with the correct sign
+        guard let maxIdx = absMemory.argmax() else { return 0 }
         return memory[maxIdx]
     }
     

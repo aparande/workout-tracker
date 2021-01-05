@@ -24,6 +24,9 @@ extension CMMotionManager: DeviceMotionManager {
     }
 }
 
+/**
+ Mock class to enable testing in the simulator
+ */
 class MockCMMotionManager: DeviceMotionManager {
     var isDeviceMotionAvailable = true
     var deviceMotionUpdateInterval = 1.0 / 50.0
@@ -31,6 +34,7 @@ class MockCMMotionManager: DeviceMotionManager {
     var motionData: [MotionData]
     var timer: Timer?
     
+    // Load the JSON
     init() {
         let dataPath = Bundle.main.path(forResource: "calibration", ofType: "json")!
         
@@ -42,6 +46,9 @@ class MockCMMotionManager: DeviceMotionManager {
         fatalError("Started real updates on mock device!")
     }
     
+    /**
+     Create a timer based on the update interval to read data from the buffer
+     */
     func startMockedUpdates(handler: @escaping (MotionData?) -> Void) {
         print("Starting mocked motion updates")
         timer = Timer.scheduledTimer(withTimeInterval: deviceMotionUpdateInterval, repeats: true, block: { (timer) in

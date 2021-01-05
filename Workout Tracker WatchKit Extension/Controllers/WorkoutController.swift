@@ -9,6 +9,7 @@
 import WatchKit
 import WatchConnectivity
 
+/** Interface controller for Workouts */
 class WorkoutController: WKInterfaceController, WorkoutManagerDelegate {
     var WORKOUT_TYPE: SessionType { return .counting }
     
@@ -28,7 +29,7 @@ class WorkoutController: WKInterfaceController, WorkoutManagerDelegate {
         }
     }
     
-    var state = State.up {
+    var state = State.rest {
         didSet {
             stateLabel.setText(state.rawValue)
         }
@@ -44,14 +45,32 @@ class WorkoutController: WKInterfaceController, WorkoutManagerDelegate {
     
     override func awake(withContext context: Any?) {
         self.count = 0
-        self.state = .up
+        self.state = .rest
         
-        guard let exercise = context as? Exercise else { return }
-        self.workoutManager = WorkoutManager(withDetector: RepDetector(withCalibration: exercise.calibration))
+        // Load the calibration data and use it to initialize the workout manager
+        guard let calibrationData = UserDefaults.standard.data(forKey: "calibration") else { return }
+        guard let calibration = try? PropertyListDecoder().decode(Calibration.self, from: calibrationData) else { return }
+        
+        self.workoutManager = WorkoutManager(withDetector: RepDetector(withCalibration: calibration))
         self.workoutManager?.delegate = self
     }
     
+    /**
+     Start the workout
+     */
     @IBAction func start() {
+        // Make sure the calibration exists before starting the workout
+        if self.WORKOUT_TYPE == .counting && self.workoutManager == nil {
+            let okAction = WKAlertAction(title: "Ok", style: .default) {
+                DispatchQueue.main.async {
+                    self.popToRootController()
+                }
+            }
+            
+            presentAlert(withTitle: "Error", message: "You need to calibrate the watch first", preferredStyle: .alert, actions: [okAction])
+            return
+        }
+        
         if workoutInSession {
             self.workoutManager?.stopWorkout()
             self.workoutInSession = false
@@ -79,11 +98,11 @@ class WorkoutController: WKInterfaceController, WorkoutManagerDelegate {
     
     func workoutEnded(_ manager: WorkoutManager, sessionData: [MotionData]?) {
         // Encode the session data as JSON
-        
         try? self.save(jsonData: sessionData, toFileNamed: "\(self.WORKOUT_TYPE.rawValue)-\(Date().datetime)")
     }
 }
 
+/** Implement the file transfer protocol */
 extension WorkoutController: WCSessionFileTransferDelegate {
     func session(_ session: WCSession, activationDidCompleteWith activationState: WCSessionActivationState, error: Error?) {
         if activationState == .activated {

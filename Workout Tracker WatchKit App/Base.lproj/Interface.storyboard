@@ -38,11 +38,11 @@
             <objects>
                 <controller id="7vt-ef-stJ" customClass="WorkoutController" customModule="Workout_Tracker_WatchKit_Extension">
                     <items>
-                        <label width="131" height="75" alignment="left" text="1" textAlignment="center" id="mhH-nV-7Gi">
+                        <label width="1" height="75" alignment="left" text="1" textAlignment="center" id="mhH-nV-7Gi">
                             <color key="textColor" red="0.78856676820000005" green="0.0" blue="0.051597339169999999" alpha="1" colorSpace="custom" customColorSpace="displayP3"/>
                             <fontDescription key="font" style="UICTFontTextStyleTitle1"/>
                         </label>
-                        <label width="136" alignment="left" text="Down" textAlignment="center" id="kpd-gZ-UL0"/>
+                        <label width="1" alignment="left" text="Down" textAlignment="center" id="kpd-gZ-UL0"/>
                         <separator alignment="left" id="Er7-1O-aZB"/>
                         <button width="1" alignment="left" title="Start" id="RW1-0s-wev">
                             <connections>
@@ -64,43 +64,17 @@
             <objects>
                 <controller title="Home" id="MMm-tc-bQB" customClass="HomeController" customModule="Workout_Tracker_WatchKit_Extension">
                     <items>
-                        <table alignment="left" id="3zq-Iw-3cf">
-                            <items>
-                                <tableRow identifier="ExerciseRow" id="1T2-DM-JEW" customClass="ExerciseRowController" customModule="Workout_Tracker_WatchKit_Extension">
-                                    <group key="rootItem" width="1" alignment="left" id="fZq-so-pIN">
-                                        <items>
-                                            <label width="1" height="1" alignment="left" text="Title" id="muP-h0-oaP"/>
-                                        </items>
-                                    </group>
-                                    <connections>
-                                        <outlet property="exerciseNameLabel" destination="muP-h0-oaP" id="VMa-Ch-eib"/>
-                                        <segue destination="7vt-ef-stJ" kind="push" identifier="go_to_exercise" id="W8T-PZ-7sq"/>
-                                    </connections>
-                                </tableRow>
-                                <tableRow identifier="CalibrationRow" id="NMa-rU-WcG">
-                                    <group key="rootItem" width="1" height="0.0" alignment="left" contentMode="center" id="EWP-yk-R8p">
-                                        <items>
-                                            <group width="50" height="50" alignment="center" verticalAlignment="center" radius="25" id="CN0-3u-lv1">
-                                                <items>
-                                                    <label width="1" height="1" heightAdjustment="-5" alignment="center" text="+" textAlignment="center" id="A2Z-Ze-AUZ">
-                                                        <fontDescription key="font" style="UICTFontTextStyleTitle0"/>
-                                                    </label>
-                                                </items>
-                                                <color key="backgroundColor" red="0.75294117650000003" green="0.22352941179999999" blue="0.16862745100000001" alpha="1" colorSpace="calibratedRGB"/>
-                                            </group>
-                                        </items>
-                                        <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
-                                    </group>
-                                    <connections>
-                                        <segue destination="AgC-eL-Hgc" kind="modal" identifier="go_to_calibration" id="Eev-sc-62k"/>
-                                    </connections>
-                                </tableRow>
-                            </items>
-                        </table>
+                        <button width="1" alignment="left" title="Count" id="YO8-AH-rJb" userLabel="Count">
+                            <connections>
+                                <segue destination="7vt-ef-stJ" kind="push" identifier="go_to_exercise" id="cEe-mS-fdJ"/>
+                            </connections>
+                        </button>
+                        <button width="1" alignment="left" title="Calibrate" id="qsa-ma-s6E" userLabel="Calibrate">
+                            <connections>
+                                <segue destination="AgC-eL-Hgc" kind="push" identifier="go_to_calibration" id="e4p-Lz-5jo"/>
+                            </connections>
+                        </button>
                     </items>
-                    <connections>
-                        <outlet property="exerciseTable" destination="3zq-Iw-3cf" id="Xci-sF-cjc"/>
-                    </connections>
                 </controller>
             </objects>
             <point key="canvasLocation" x="-172" y="142"/>

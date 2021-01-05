@@ -14,3 +14,15 @@ extension Array where Element: Comparable {
         return indices.max(by: { self[$0] < self[$1] })
     }
 }
+
+extension Date {
+    var millisecondsSince1970:Int64 {
+        return Int64((self.timeIntervalSince1970 * 1000.0).rounded())
+    }
+    
+    var datetime: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "dd-MM-yyyy-HH:mm:ss"
+        return formatter.string(from: self)
+    }
+}

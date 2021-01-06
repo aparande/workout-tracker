@@ -6,8 +6,10 @@ Supports iOS 13.2 and above, WatchOS 4.0 and above.
 Read how it works on [Medium](https://anmolparande.medium.com/real-time-signal-processing-on-the-apple-watch-counting-exercise-repetitions-a224f2b678ca).
 
 ## Apple Watch Application
-![Watch Home Screen](Images/watch-home.png)
-![Watch Counting Screen](Images/watch-count.png)
+| | |
+:--:|:--:|
+![Watch Home Screen](Images/watch-home.png) | ![Watch Counting Screen](Images/watch-count.png)
+
 The code for the Watch application can be found in the `Workout Tracker WatchKit Extension` folder.
 From the Watch, the user can choose to calibrate or count.
 If they choose calibrate, they are taken to a screen.
